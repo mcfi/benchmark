@@ -45,6 +45,13 @@ add_executable(simd_bench
 ######################################################################
 target_compile_options(simd_bench PRIVATE -march=native)
 
+if(IS_X86_64)
+    set_property(SOURCE x86.S PROPERTY COMPILE_FLAGS "-march=x86-64+sse2+avx+avx2+avx512f")
+endif()
+
+if(IS_AARCH64)
+    set_property(SOURCE arm64.S PROPERTY COMPILE_FLAGS "-march=armv8-a+simd+sve")
+endif()
 ######################################################################
 # Link Google Benchmark
 ######################################################################
