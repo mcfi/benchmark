@@ -17,6 +17,7 @@ static __init int ku_copy_benchmark(void) {
   char __user *umem = NULL;
   u64 start, end;
   unsigned int size;
+  long unsigned int total_bytes = (1024UL * 1024 * 1024 * 8); /* 8GB */
   unsigned int iterations;
   unsigned int buf_size = 256 * 1024; /* 256KB buffer */
   kmem = kzalloc(buf_size, GFP_KERNEL);
@@ -36,7 +37,7 @@ static __init int ku_copy_benchmark(void) {
 
   pr_info("Kernel-User memory copy microbenchmark starts.\n");
   for (size = 8; size <= buf_size; size = (size << 1)) {
-    iterations = (1024UL * 1024 * 1024) / size;
+    iterations = total_bytes / size;
     memset(kmem, 0x55, size);
     start = ktime_get_ns();
     for (unsigned int i = 0; i < iterations; i++) {
@@ -49,7 +50,7 @@ static __init int ku_copy_benchmark(void) {
     end = ktime_get_ns();
     pr_info("copy_to_user   %8u bytes: %10llu ns (%10u iters) %14llu bytes/s\n",
             size, end - start, iterations,
-            iterations * size * 1000000000UL / (end - start));
+            total_bytes * 1000000000UL / (end - start));
 
     start = ktime_get_ns();
     for (unsigned int i = 0; i < iterations; i++) {
@@ -62,7 +63,7 @@ static __init int ku_copy_benchmark(void) {
     end = ktime_get_ns();
     pr_info("copy_from_user %8u bytes: %10llu ns (%10u iters) %14llu bytes/s\n",
             size, end - start, iterations,
-            iterations * size * 1000000000UL / (end - start));
+            total_bytes * 1000000000UL / (end - start));
   }
 
   pr_info("Kernel-User memory copy microbenchmark ends.\n");
