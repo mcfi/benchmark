@@ -17,7 +17,7 @@ static __init int ku_copy_benchmark(void) {
   char __user *umem = NULL;
   u64 start, end;
   unsigned int size;
-  long unsigned int total_bytes = (1024UL * 1024 * 1024 * 4); /* 4GB */
+  long unsigned int total_bytes = (1024UL * 1024 * 1024); /* 1GB */
   unsigned int iterations;
   unsigned int buf_size = 256 * 1024; /* 256KB buffer */
   kmem = kzalloc(buf_size, GFP_KERNEL);
